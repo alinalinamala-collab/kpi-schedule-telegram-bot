@@ -1,0 +1,8 @@
+venv/
+project1/
+__pycache__/
+*.pyc
+*.db
+bot_database.db
+.vscode/
+.env
