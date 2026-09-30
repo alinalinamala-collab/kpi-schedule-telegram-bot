@@ -3,11 +3,10 @@ import sqlite3
 DB_NAME = "bot_database.db"
 
 def init_db():
-    """Ініціалізація таблиць бази даних"""
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         
-        # 1. Таблиця користувачів: ID в Telegram та ID їхньої групи
+        # Таблиця користувачів
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS users (
             user_id INTEGER PRIMARY KEY,
@@ -15,7 +14,7 @@ def init_db():
         )
         """)
         
-        # 2. Таблиця Zoom-посилань: група, назва предмета та лінк
+        # Таблиця Zoom-посилань
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS zoom_links (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,7 +37,6 @@ def set_user_group(user_id: int, group_id: int):
         conn.commit()
 
 def get_user_group(user_id: int) -> int:
-    """Отримання ID групи за Telegram ID користувача"""
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT group_id FROM users WHERE user_id = ?", (user_id,))
@@ -46,7 +44,6 @@ def get_user_group(user_id: int) -> int:
         return result[0] if result else None
 
 def add_zoom_link(group_id: int, subject_name: str, link: str):
-    """Додавання або оновлення Zoom-посилання для всієї групи"""
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute("""
@@ -56,7 +53,6 @@ def add_zoom_link(group_id: int, subject_name: str, link: str):
         conn.commit()
 
 def get_zoom_link(group_id: int, subject_name: str) -> str:
-    """Пошук Zoom-посилання для конкретного предмета"""
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute(
